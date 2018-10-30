@@ -1,0 +1,85 @@
+#!/usr/bin/env python3
+import sys, re
+from subprocess import check_output
+
+STYLE_GUIDE_LINK = 'https://github.com/pdffiller/styleguide-hooks#commit-message-format'
+JIRA_ISSUE_LINK = 'https://pdffiller.atlassian.net/browse'
+
+
+# Collect the parameters
+commit_msg_filepath = sys.argv[1]
+
+
+run_rebase = check_output(['git', 'status']).strip().decode('utf-8')
+if run_rebase.startswith('interactive rebase in progress'):
+    exit(0)
+
+# Figure out which branch we're on
+branch = check_output(['git', 'symbolic-ref', '--short', 'HEAD']).strip().decode('utf-8')
+
+
+branch_change_1_word = re.search(r'[\w\d/-]+/(.+)', branch, flags=re.IGNORECASE)
+
+if branch_change_1_word:
+    branch_change_1_word = branch_change_1_word.group(1).lower()
+
+    change_1_words = {
+        'add' : 'Add',
+        'delete' : 'Delete',
+        'change' : 'Change',
+        'fix' : 'Fix',
+        'update' : 'Update',
+        'correct' : 'Correct',
+        'test' : 'Test',
+    }
+
+    try:
+        commit_type = change_1_words[branch_change_1_word]
+    except:
+        commit_type = None
+
+
+if not commit_type:
+    # Adding default commit message start keyword by branch name
+    branch_type = re.search(r'\w+', branch, flags=re.IGNORECASE).group(0).lower()
+
+    branch_types = {
+        'feature': 'Add',
+        'improve': '',
+        'fix': 'Fix',
+        'test': '',
+        'docs': '',
+        'style': 'Change',
+        'refactor': 'Refactor',
+        'legacy': '',
+    }
+    commit_type = branch_types[branch_type]
+
+
+# Populate the commit message with the jira issue #, if there is one
+issue_name = re.search(r'/(\w+-\d+)', branch, flags=re.IGNORECASE)
+issue_text = ''
+if issue_name:
+    issue_name = issue_name.group(1).upper()
+    issue_text = f'Issue: {JIRA_ISSUE_LINK}/{issue_name}\n'
+
+
+with open(commit_msg_filepath, 'r+') as f:
+    content = f.read()
+    f.seek(0, 0)
+    f.write(f'\
+{commit_type}  \n\
+\n\
+{issue_text}\
+# Our style guide can be found at: {STYLE_GUIDE_LINK}\n\
+\n\
+# Each commit message must begin with a capital letter beginning in it\'s basic form:\n\
+# : Add     :\n\
+# : Delete  :\n\
+# : Change  :\n\
+# : Fix     :\n\
+# : Update  :\n\
+# : Correct :\n\
+# : Test    :\n\
+# : ...     :\n\
+{content}')
