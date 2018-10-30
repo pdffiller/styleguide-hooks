@@ -2,15 +2,50 @@
 
 ##### MENU
 
+* [Dependencies](#dependencies)
+* [How use hooks](#how-use-hooks)
 * [Style guide](#style-guide)
   * [Commit message format](#commit-message-format)
   * [Branch naming format](#branch-naming-format)
 * [Making changes to tracked branches](#making-changes-to-tracked-branches)
 * [Setup protectection for repo](#setup-protectection-for-repo)
 
+## Dependencies
+
+* sh
+* python 3.6+
+
+## How to use the hooks
+
+#### 1. Clone this repo
+
+```bash
+git clone git@github.com:pdffiller/styleguide-hooks.git
+```
+
+#### 2. Setup it as your [template directory](https://git-scm.com/docs/git-init#_template_directory)
+
+```bash
+git config --global init.templatedir $(pwd)/styleguide-hooks
+```
+
+You may ignore the remainder **nevertheless it's better to follow the next steps** in order to avoid running `git init` each time the 'global' hooks are changed or updated.
+
+#### 3. Create symlink to hooks
+
+```bash
+git config --global core.hooksPath $(pwd)/styleguide-hooks/hooks
+```
+
+Via post-checkout hook you create/recreate the symlink to your hooks directory after every `git clone` of `git checkout`. [Documentation](https://git-scm.com/docs/githooks#_post_checkout).
+
+#### 4. Make it always up-to-date
+
+TODO: You can [add to cron and setup post-update hook](https://habr.com/post/329804/).
+
 ## Style guide
 
-Development of new features, modules, fixes for old functional and so on - should be in separate branches.
+Each feature, bug fix or any other change must be developed in a separate branch.
 
 ### Commit message format
 

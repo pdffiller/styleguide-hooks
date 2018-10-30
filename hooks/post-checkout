@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# Replace default hooks by symlink on every checkout
+cd $(pwd)/.git && \
+rm -rf hooks && \
+$(ln -s $(git config -l | grep core.hookspath | cut -c 16-) hooks) && \
+cd - >/dev/null
