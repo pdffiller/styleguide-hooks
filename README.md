@@ -33,7 +33,7 @@ The only exception allowed is `Initial commit`
 When making a commit message, just mentally add a phrase in front of it `"When this commit is applied the git will ..."` and your commit message should logically continue this phrase.
 
 For example:<br>
-![<span style="color:green">`When this commit is applied the git will`</span><span style="color:red">`Add README.md`</span>](http://i.piccy.info/i9/465cdb4ccf7a2d93a95f01d29a004529/1540298109/5088/1256839/When_this_commit_is_applied_the_git_willAdd_README_md.png)
+![<span style="color:green">`When this commit is applied the git will`</span><span style="color:red">`Add README.md`</span>](images/When_this_commit_is_applied_the_git_willAdd_README_md.png)
 
 #### 2. Punctuation marks are omitted at the end
 
@@ -74,7 +74,7 @@ Examples:
 * <span style="color:red">legacy</span>/<span style="color:green">v2</span>
 -->
 
-![Examples](http://i.piccy.info/i9/a2344f12b359ee7707ca43160cc57469/1540299021/26705/1256839/examples.png)
+![Examples](images/examples.png)
 
 ## Making changes to tracked branches
 
@@ -86,9 +86,9 @@ Work branch is a branch that has budded off from any one being tracked to make c
 
 Making any changes to the tracked branches should take place exclusively through pull request.
 
-> ![<span style="color:red">**Direct push to the tracked branch is strictly prohibited!**</span>](http://i.piccy.info/i9/71f2122d84f79e08b9a1a3e40f264718/1540298043/4664/1256839/Direct_push_to_the_tracked_branch_is_strictly_prohibited_.png)
+> ![<span style="color:red">**Direct push to the tracked branch is strictly prohibited!**</span>](images/Direct_push_to_the_tracked_branch_is_strictly_prohibited_.png)
 
->![<span style="color:red">It is strictly not recommended to use any working branches of colleagues on GitHub!</span>](http://i.piccy.info/i9/a4b099906c9a8993eaadc56d5989d6c5/1540299930/5768/1256839/It_is_strictly_not_recommended_to_use_any_working_branches_of_colleagues_on_GitHub_.png) Otherwise nobody is able to forcast all the consequences of such usage.
+>![<span style="color:red">It is strictly not recommended to use any working branches of colleagues on GitHub!</span>](images/It_is_strictly_not_recommended_to_use_any_working_branches_of_colleagues_on_GitHub_.png) Otherwise nobody is able to forcast all the consequences of such usage.
 
 Use only stable, tracked branches on GitHub in your applications!
 
