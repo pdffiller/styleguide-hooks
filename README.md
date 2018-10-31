@@ -1,5 +1,13 @@
 # styleguide-hooks
 
+##### MENU
+
+* [Style guide](#style-guide)
+  * [Commit message format](#commit-message-format)
+  * [Branch naming format](#branch-naming-format)
+* [Making changes to tracked branches](#making-changes-to-tracked-branches)
+* [Setup protectection for repo](#setup-protectection-for-repo)
+
 ## Style guide
 
 Development of new features, modules, fixes for old functional and so on - should be in separate branches.
@@ -105,3 +113,27 @@ Merge is performed by executing the "rebase and merge" command — a special but
 ### Deleting work branch
 
 Right after the working branch ~~is returned to the church~~ is rebased into the tracked branch - deleted. Branch is to be deleted by the PR assignee who perform the rebase.
+
+## Setup protectection for repo
+
+Go to repo Settings.
+
+### Options - Data services
+
+If private repo - enable Vulnerability alerts. In public it enable by default.
+
+![Enabled Data Services](images/github_data_services.png)
+
+### Options - Merge button
+
+Allow only Rebase
+
+![Disable other buttons](images/github_merge_button.png)
+
+### Branch - Branch protection rules
+
+WIP check can be found [here](https://github.com/marketplace/wip).
+
+Also, you can enable WIP check protection (or any other) only after create first pull request.
+
+![Protection rules](images/github_branch_protection.png)
