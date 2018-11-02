@@ -172,3 +172,5 @@ WIP check can be found [here](https://github.com/marketplace/wip).
 Also, you can enable WIP check protection (or any other) only after create first pull request.
 
 ![Protection rules](images/github_branch_protection.png)
+
+Protection rules can be enforced by [enforce_branch_protection.py](https://github.com/pdffiller/styleguide-hooks/blob/stable/scripts/enforce_branch_protection.py) script.

@@ -1,0 +1,2 @@
+*.pyc
+scripts/enforce_branch_protection_settings.py
