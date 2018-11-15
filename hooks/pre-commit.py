@@ -26,7 +26,7 @@ if not first_word:
     exit(f'Are you DevQAOps?\nPlease, read style guide.\n\n{footer}')
 
 # Check is branch has branch type
-first_word = first_word.group(0).lower()
+first_word = first_word.group(0)
 
 branch_types = [
     'feature',

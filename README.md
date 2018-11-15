@@ -107,6 +107,8 @@ Used pattern: `issue_type / [path_to_folder /] [Jira issue ID /| GitHub issue # 
 * `refactor` - refactoring application code
 * `legacy` - in some cases, it may take a long time to parallelly develop several development directions in one repository (for example, we have already switched to the v3 module version, but for some terraform configurations, we need changes in the modules of v2 versions, and they will also need an indefinite long time). Such branches are strictly forbidden to be removed from the repository without the permission of the technical support.
 
+Issue_type **must be** lowercase.
+
 <!--
 Examples:
 * <span style="color:red">feature</span>/<span style="color:blue">MODULES/zabbix-agent/</span><span style="color:green">add_zabbix-agent</span>
