@@ -3,6 +3,7 @@
 ##### MENU
 
 * [Dependencies](#dependencies)
+* [Run tests](#run-tests)
 * [How use hooks](#how-use-hooks)
 * [Style guide](#style-guide)
   * [Commit message format](#commit-message-format)
@@ -12,8 +13,24 @@
 
 ## Dependencies
 
-* sh
-* python 3.6+
+* bash 4+
+
+## Run tests
+
+1. Install [bats](https://github.com/sstephenson/bats)
+
+```bash
+git clone https://github.com/sstephenson/bats.git
+sudo bats/install.sh /usr/local
+rm -rf bats
+```
+
+2. Run tests
+
+```bash
+cd tests
+./all-tests.sh
+```
 
 ## How to use the hooks
 
