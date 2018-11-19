@@ -31,9 +31,9 @@ declare -A change_1_words=(
     ["test"]="Test"
 )
 
-COMMIT_TYPE=$(${change_1_words[${branch_change_1_word}]} || '')
+COMMIT_TYPE=${change_1_words[${branch_change_1_word}]}
 
-if [ "${COMMIT_TYPE}" == "" ] ; then
+if [ -z "${COMMIT_TYPE}" ] ; then
     # Adding default commit message start keyword by branch name
     ISSUE_TYPE=$(echo ${BRANCH} | cut -d'/' -f1)
 
