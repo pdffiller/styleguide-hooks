@@ -5,6 +5,7 @@ JIRA_ISSUE_LINK="https://pdffiller.atlassian.net/browse"
 
 
 COMMIT_MSG_FILEPATH=$1
+COMMIT_MSG_SOURCE=$2
 
 
 run_rebase=$(git status)
@@ -64,6 +65,17 @@ if [ -n "${THIRD_ARG}" ] ; then
         ISSUE_TEXT="Issue: ${JIRA_ISSUE_LINK}/${ISSUE_NAME}"
     fi
 fi
+
+
+# Use commit message from `git commit -m`
+if [[ $COMMIT_MSG_SOURCE == 'message' ]] ; then
+    COMMIT_MSG=$(cat $COMMIT_MSG_FILEPATH)
+
+    printf "$COMMIT_MSG\n\n${ISSUE_TEXT}" > ${COMMIT_MSG_FILEPATH}
+
+    exit 0
+fi
+
 
 echo "${COMMIT_TYPE}
 
