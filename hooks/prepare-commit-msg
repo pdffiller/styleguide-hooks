@@ -64,6 +64,23 @@ if [ -n "${THIRD_ARG}" ] ; then
     if [[ ${ISSUE_NAME} =~ ${JIRA} ]] ; then
         ISSUE_TEXT="Issue: ${JIRA_ISSUE_LINK}/${ISSUE_NAME}"
     fi
+
+    GITHUB='^[0-9]+$'
+    if [[ ${ISSUE_NAME} =~ ${GITHUB} ]] ; then
+        REPO=$(git remote get-url --push origin 2>/dev/null)
+
+        if [ -z "${REPO}" ] ; then
+            printf "Please, specify remote origin url.\n\n"
+            echo   "git remote set-url add origin git@github.com:USERNAME/REPOSITORY.git"
+            exit 1
+        fi
+
+        REPO=${REPO#"git@"}
+        REPO=${REPO%".git"}
+        REPO=$(echo ${REPO} | tr ':' '/')
+
+        ISSUE_TEXT="Issue: https://${REPO}/issues/${ISSUE_NAME}"
+    fi
 fi
 
 
