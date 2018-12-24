@@ -55,20 +55,22 @@ DESCRIPTION=$(echo ${BRANCH} | cut -s -d'/' -f2)
 if [ -z "${DESCRIPTION}" ] ; then
     echo   "Check branch description. In '${BRANCH}' not found any decription"
     printf "Prefered construction: "
-    printf "issue_type/Jira issue ID/short_description${FOOTER}"
+    printf "issue_type/issue_ID/short_description${FOOTER}"
     exit 1
 fi
 
 
-# Check is jira issue have mistake in it name
+# Check is jira/github issue have mistake in it name
 THIRD_ARG=$(echo ${BRANCH} | cut -s -d'/' -f3)
 if [ -n "${THIRD_ARG}" ] ; then
     ISSUE_NAME=$(echo ${BRANCH} | rev | cut -s -d'/' -f2 | rev)
 
+    GITHUB='^[0-9]+$'
     JIRA='^[A-Z]{2,}-[0-9]+' # Default format: https://tinyurl.com/yd48c5op
-    if ! [[ ${ISSUE_NAME} =~ ${JIRA} ]] ; then
-        printf "Looks like mistake in Jira issue name.\n"
-        printf "Got '${ISSUE_NAME}', but should be like 'PRJ-1234'"
+    if ! [[ ${ISSUE_NAME} =~ ${JIRA} || ${ISSUE_NAME} =~ ${GITHUB} ]] ; then
+        printf "Looks like mistake in Jira/Github issue name.\n"
+        printf "Got '${ISSUE_NAME}', but should be like "
+        printf "'PRJ-1234' for Jira or '1234' for Github"
         printf "${FOOTER}"
         exit 1
     fi

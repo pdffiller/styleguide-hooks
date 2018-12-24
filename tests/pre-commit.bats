@@ -122,6 +122,7 @@ function test_via_commit {
 @test "support right issue ID format" {
     BRANCH_NAMES=(
         test/EXAMPLE-42/short_description
+        test/21/short_description
         test/QQ-1/short_description
         test/MODULES/some-module/QQ-3/short_description
     )
