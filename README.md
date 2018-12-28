@@ -10,6 +10,7 @@
   * [Branch naming format](#branch-naming-format)
 * [Making changes to tracked branches](#making-changes-to-tracked-branches)
 * [Setup protectection for repo](#setup-protectection-for-repo)
+* [Git useful links](#git-useful-links)
 
 ## Dependencies
 
@@ -105,6 +106,16 @@ Example:<br>
 It's git recommendation and soft limit, 50+ characters can be truncated when displayed.<br>
 Hard limit - 72 characters.
 
+#### Another useful practices
+
+* https://chris.beams.io/posts/git-commit
+* https://alistapart.com/article/the-art-of-the-commit
+* https://robots.thoughtbot.com/5-useful-tips-for-a-better-commit-message
+* https://github.com/erlang/otp/wiki/writing-good-commit-messages
+* https://wiki.openstack.org/wiki/GitCommitMessages
+* https://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
+* https://dev.to/gonedark/when-to-make-a-git-commit
+
 ### Branch naming format
 
 Used pattern: `issue_type / [path_to_folder /] [Jira issue ID /| GitHub issue # /] short_description`
@@ -193,3 +204,11 @@ Also, you can enable WIP check protection (or any other) only after create first
 ![Protection rules](images/github_branch_protection.png)
 
 Protection rules can be enforced by [enforce_branch_protection.py](https://github.com/pdffiller/styleguide-hooks/blob/stable/scripts/enforce_branch_protection.py) script.
+
+## Git useful links
+
+* [ProGit 2](https://git-scm.com/book/en/v2) [:ukraine:](https://git-scm.com/book/uk/v2)
+* [Try Git](https://try.github.io/)
+* [Try Git Branching](http://learngitbranching.js.org/)
+* [Interactive diagram/cheatsheet about git](http://ndpsoftware.com/git-cheatsheet.html)
+* [You're using git wrong](https://web.archive.org/web/20181029051129/https://dpc.pw/blog/2017/08/youre-using-git-wrong/)
