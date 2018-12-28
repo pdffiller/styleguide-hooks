@@ -8,6 +8,7 @@
 * [Style guide](#style-guide)
   * [Commit message format](#commit-message-format)
   * [Branch naming format](#branch-naming-format)
+  * [Limits for branches and commits](#limits-for-branches-and-commits)
 * [Making changes to tracked branches](#making-changes-to-tracked-branches)
 * [Setup protectection for repo](#setup-protectection-for-repo)
 * [Git useful links](#git-useful-links)
@@ -148,6 +149,32 @@ Examples:
 -->
 
 ![Examples](images/examples.png)
+
+### Limits for branches and commits
+
+#### 1. Every commit SHOULD BE <1000 changed lines
+
+Exceptions:
+
+* Terraform copy-paste development from one enviroment to another. But, if it new infrastucture - you MUST setup environment changes in separate commit.
+* Vendor-dependency updates (such like in Go)
+* Addition/Deletions/changes same little stuff in every file. Like `enviroment` -> `environment` 10000 times
+
+#### 2. One change type - one branch
+
+If you need make `fix` and `feature` - their MUST BE in different branches.
+
+Exceptions:
+
+* If:
+
+  * you work with 1 (<1000 lines) functional autonomy file which not affect any other
+  * you make `refactor` and some other stuff
+  * All changes in sum be <1000
+
+#### 3. One feature - one branch
+
+If you add many clusters which not depend on each other - they MUST BE in diferent branches.
 
 ## Making changes to tracked branches
 
