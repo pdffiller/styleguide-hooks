@@ -1,8 +1,10 @@
 #!/bin/bash
 
 STYLE_GUIDE_LINK="https://github.com/pdffiller/styleguide-hooks#commit-message-format"
-JIRA_ISSUE_LINK="https://pdffiller.atlassian.net/browse"
 
+declare -A JIRA_ISSUE_LINK=(
+    ["org_name_in_github"]="https://org_name_in_jira.atlassian.net/browse"
+)
 
 COMMIT_MSG_FILEPATH=$1
 COMMIT_MSG_SOURCE=$2
@@ -60,23 +62,31 @@ THIRD_ARG=$(echo ${BRANCH} | cut -s -d'/' -f3)
 if [ -n "${THIRD_ARG}" ] ; then
     ISSUE_NAME=$(echo ${BRANCH} | rev | cut -s -d'/' -f2 | rev)
 
-    JIRA='^[A-Z]{2,}-[0-9]+' # Default format: https://tinyurl.com/yd48c5op
-    if [[ ${ISSUE_NAME} =~ ${JIRA} ]] ; then
-        ISSUE_TEXT="Issue: ${JIRA_ISSUE_LINK}/${ISSUE_NAME}"
+    REPO=$(git remote get-url --push origin 2>/dev/null)
+
+    if [ -z "${REPO}" ] ; then
+        printf "Please, specify remote origin url.\n\n"
+        echo   "git remote add origin git@github.com:USERNAME/REPOSITORY.git"
+        exit 1
     fi
 
-    GITHUB='^[0-9]+$'
-    if [[ ${ISSUE_NAME} =~ ${GITHUB} ]] ; then
-        REPO=$(git remote get-url --push origin 2>/dev/null)
+    REPO=${REPO#"git@"}
+    REPO=${REPO%".git"}
 
-        if [ -z "${REPO}" ] ; then
-            printf "Please, specify remote origin url.\n\n"
-            echo   "git remote set-url add origin git@github.com:USERNAME/REPOSITORY.git"
-            exit 1
+    JIRA='^[A-Z]{2,}-[0-9]+' # Default format: https://tinyurl.com/yd48c5op
+    GITHUB='^[0-9]+$'
+    if [[ ${ISSUE_NAME} =~ ${JIRA} ]] ; then
+
+        REPO=$(echo ${REPO} | cut -s -d':' -f2 | cut -s -d'/' -f1)
+        LINK=${JIRA_ISSUE_LINK[${REPO}]}
+
+        if [ -z "${LINK}" ] ; then
+            LINK="https://${REPO}.atlassian.net/browse"
         fi
 
-        REPO=${REPO#"git@"}
-        REPO=${REPO%".git"}
+        ISSUE_TEXT="Issue: ${LINK}/${ISSUE_NAME}"
+
+    elif [[ ${ISSUE_NAME} =~ ${GITHUB} ]] ; then
         REPO=$(echo ${REPO} | tr ':' '/')
 
         ISSUE_TEXT="Issue: https://${REPO}/issues/${ISSUE_NAME}"
