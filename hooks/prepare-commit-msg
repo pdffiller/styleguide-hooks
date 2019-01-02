@@ -1,10 +1,12 @@
 #!/bin/bash
 
-STYLE_GUIDE_LINK="https://github.com/pdffiller/styleguide-hooks#commit-message-format"
+# Import settings
+. .git/hooks/_default_settings.sh
 
-declare -A JIRA_ISSUE_LINK=(
-    ["org_name_in_github"]="https://org_name_in_jira.atlassian.net/browse"
-)
+if [ -f .git/hooks/_user_defined_settings.sh ]; then
+    . .git/hooks/_user_defined_settings.sh
+fi
+
 
 COMMIT_MSG_FILEPATH=$1
 COMMIT_MSG_SOURCE=$2
@@ -73,9 +75,7 @@ if [ -n "${THIRD_ARG}" ] ; then
     REPO=${REPO#"git@"}
     REPO=${REPO%".git"}
 
-    JIRA='^[A-Z]{2,}-[0-9]+' # Default format: https://tinyurl.com/yd48c5op
-    GITHUB='^[0-9]+$'
-    if [[ ${ISSUE_NAME} =~ ${JIRA} ]] ; then
+    if [[ ${ISSUE_NAME} =~ ${JIRA_REGEX} ]] ; then
 
         REPO=$(echo ${REPO} | cut -s -d':' -f2 | cut -s -d'/' -f1)
         LINK=${JIRA_ISSUE_LINK[${REPO}]}
@@ -86,7 +86,7 @@ if [ -n "${THIRD_ARG}" ] ; then
 
         ISSUE_TEXT="Issue: ${LINK}/${ISSUE_NAME}"
 
-    elif [[ ${ISSUE_NAME} =~ ${GITHUB} ]] ; then
+    elif [[ ${ISSUE_NAME} =~ ${GITHUB_REGEX} ]] ; then
         REPO=$(echo ${REPO} | tr ':' '/')
 
         ISSUE_TEXT="Issue: https://${REPO}/issues/${ISSUE_NAME}"

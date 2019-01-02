@@ -1,2 +1,3 @@
 *.pyc
 scripts/enforce_branch_protection_settings.py
+hooks/_user_defined_settings.sh

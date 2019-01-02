@@ -58,7 +58,15 @@ git config --global core.hooksPath $(pwd)/styleguide-hooks/hooks
 
 Via post-checkout hook you create/recreate the symlink to your hooks directory after every `git clone` of `git checkout`. [Documentation](https://git-scm.com/docs/githooks#_post_checkout).
 
-#### 4. Make it always up-to-date
+#### 4. If need - change default configuration
+
+1. Looks on `hooks/_default_settings.sh`<br>
+If you'd like change something:
+2. Create `hooks/_user_defined_settings.sh`
+3. Copy settings for change from `default` to `user_defined`
+4. Change settings in `hooks/_user_defined_settings.sh`
+
+#### 5. Make it always up-to-date
 
 TODO: You can [add to cron and setup post-update hook](https://habr.com/post/329804/).
 
