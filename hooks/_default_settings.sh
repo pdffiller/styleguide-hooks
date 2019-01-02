@@ -1,3 +1,5 @@
+#!/bin/bash
+
 JIRA_REGEX='^[A-Z]{2,}-[0-9]+' # Default format: https://tinyurl.com/yd48c5op
 GITHUB_REGEX='^[0-9]+$'
 

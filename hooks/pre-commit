@@ -22,7 +22,7 @@ if [ "${BRANCH}" == "" ] ; then
     exit 0
 fi
 
-ISSUE_TYPE=$(echo ${BRANCH} | cut -d'/' -f1)
+ISSUE_TYPE=$(echo "${BRANCH}" | cut -d'/' -f1)
 
 ALLOWED_TYPES=(
     feature
@@ -35,42 +35,47 @@ ALLOWED_TYPES=(
     legacy
 )
 
-for i in `seq 0 ${#ALLOWED_TYPES[@]}`; do
-    if [ "${ALLOWED_TYPES[$i]}" == "${ISSUE_TYPE}" ] ; then
+type_not_found=1
+for i in $(seq 0 ${#ALLOWED_TYPES[@]}); do
+    if [ "${ALLOWED_TYPES[$i]}" == "${ISSUE_TYPE}" ]; then
+        type_not_found=0
         break
-    fi
-
-    if [ $i == $((${#ALLOWED_TYPES[@]} - 1)) ] ; then
-        printf "Check branch type. Get '${ISSUE_TYPE}' but it should start from "
-        printf '"%s" ' "${ALLOWED_TYPES[@]}"
-        printf "${FOOTER}"
-        exit 1
     fi
 done
 
+if [ $type_not_found -ne 0 ] ; then
+    printf "Check branch type. Get '${ISSUE_TYPE}' but it should start from "
+    printf '"%s" ' "${ALLOWED_TYPES[@]}"
+    printf "${FOOTER}"
+    exit 1
+fi
+
+
 # Check is branch have any description
-DESCRIPTION=$(echo ${BRANCH} | cut -s -d'/' -f2)
+DESCRIPTION=$(echo "${BRANCH}" | cut -s -d'/' -f2)
 
 if [ -z "${DESCRIPTION}" ] ; then
-    echo   "Check branch description. In '${BRANCH}' not found any decription"
-    printf "Prefered construction: "
-    printf "issue_type/issue_ID/short_description${FOOTER}"
+    echo -en \
+        "Check branch description. In '${BRANCH}' not found any decription\n"\
+        "Prefered construction: "\
+        "issue_type/issue_ID/short_description${FOOTER}"\
     exit 1
 fi
 
 
 # Check is jira/github issue have mistake in it name
-THIRD_ARG=$(echo ${BRANCH} | cut -s -d'/' -f3)
+THIRD_ARG=$(echo "${BRANCH}" | cut -s -d'/' -f3)
 if [ -n "${THIRD_ARG}" ] ; then
-    ISSUE_NAME=$(echo ${BRANCH} | rev | cut -s -d'/' -f2 | rev)
+    ISSUE_NAME=$(echo "${BRANCH}" | rev | cut -s -d'/' -f2 | rev)
 
     if ! [[ ${ISSUE_NAME} =~ ${JIRA_REGEX} ||
             ${ISSUE_NAME} =~ ${GITHUB_REGEX} ]] ; then
 
-        printf "Looks like mistake in Jira/Github issue name.\n"
-        printf "Got '${ISSUE_NAME}', but should be like "
-        printf "'PRJ-1234' for Jira or '1234' for Github"
-        printf "${FOOTER}"
+        echo -en \
+            "Looks like mistake in Jira/Github issue name.\n"\
+            "Got '${ISSUE_NAME}', but should be like "\
+            "'PRJ-1234' for Jira or '1234' for Github"\
+            "${FOOTER}"
         exit 1
     fi
 fi
@@ -81,7 +86,10 @@ fi
 # Default pre-commit #
 ######################
 
-if git rev-parse --verify HEAD >/dev/null 2>&1
+git rev-parse --verify HEAD >/dev/null 2>&1;
+exitcode=$?
+
+if [ ${exitcode} -ne 0 ]
 then
     against=HEAD
 else
@@ -95,27 +103,23 @@ allownonascii=$(git config --bool hooks.allownonascii)
 # Redirect output to stderr.
 # exec 1>&2
 
+
+# Note that the use of brackets around a tr range is ok here, (it's
+# even required, for portability to Solaris 10's /usr/bin/tr), since
+# the square bracket bytes happen to fall in the designated range.
+DIFF_BYTE_COUNT="$(git diff --cached --name-only --diff-filter=A -z $against |
+    LC_ALL=C tr -d '[ -~]\0' | wc -c)"
+
 # Cross platform projects tend to avoid non-ASCII filenames; prevent
 # them from being added to the repository. We exploit the fact that the
 # printable range starts at the space character and ends with tilde.
-if [ "$allownonascii" != "true" ] &&
-    # Note that the use of brackets around a tr range is ok here, (it's
-    # even required, for portability to Solaris 10's /usr/bin/tr), since
-    # the square bracket bytes happen to fall in the designated range.
-    test $(git diff --cached --name-only --diff-filter=A -z $against |
-      LC_ALL=C tr -d '[ -~]\0' | wc -c) != 0
-then
-    cat <<\EOF
-Error: Attempt to add a non-ASCII file name.
-
-This can cause problems if you want to work with people on other platforms.
-
-To be portable it is advisable to rename the file.
-
-If you know what you are doing you can disable this check using:
-
-  git config hooks.allownonascii true
-EOF
+if [ "$allownonascii" != "true" ] && [ "${DIFF_BYTE_COUNT}" -ne 0 ]; then
+    echo -e \
+        "Error: Attempt to add a non-ASCII file name.\n\n"\
+        "This can cause problems if you want to work with people on other platforms.\n\n"\
+        "To be portable it is advisable to rename the file.\n\n"\
+        "If you know what you are doing you can disable this check using:\n\n"\
+        "  git config hooks.allownonascii true"
     exit 1
 fi
 
