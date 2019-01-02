@@ -12,8 +12,8 @@ COMMIT_MSG_FILEPATH=$1
 COMMIT_MSG_SOURCE=$2
 
 
-run_rebase=$(git status)
-if [[ $run_rebase == 'interactive rebase in progress'* ]] ; then
+RUN_REBASE=$(git status)
+if [[ ${RUN_REBASE} == 'interactive rebase in progress'* ]] ; then
     exit 0
 fi
 
@@ -21,12 +21,12 @@ fi
 BRANCH=$(git symbolic-ref --short HEAD)
 
 
-# Get short description, then get 1 word from it, then make word lowercase
-branch_change_1_word=$(echo ${BRANCH} | rev | cut -d'/' -f1 | rev | \
-                       cut -d'_' -f1 | awk '{print tolower($0)}')
+# Get short description, then get 1 word in lowercase from it
+BRANCH_CHANGE_1_WORD=$(echo "${BRANCH}" | awk -F "/" '{print $NF}' | \
+                       awk -F "_" '{print tolower($1)}')
 
 
-declare -A change_1_words=(
+declare -A CHANGE_1_WORDS=(
     ["add"]="Add"
     ["delete"]="Delete"
     ["change"]="Change"
@@ -36,11 +36,11 @@ declare -A change_1_words=(
     ["test"]="Test"
 )
 
-COMMIT_TYPE=${change_1_words[${branch_change_1_word}]}
+COMMIT_TYPE=${CHANGE_1_WORDS[${BRANCH_CHANGE_1_WORD}]}
 
 if [ -z "${COMMIT_TYPE}" ] ; then
     # Adding default commit message start keyword by branch name
-    ISSUE_TYPE=$(echo ${BRANCH} | cut -d'/' -f1)
+    ISSUE_TYPE=$(echo "${BRANCH}" | cut -d'/' -f1)
 
     declare -A ISSUE_TYPES=(
         ["feature"]="Add"
@@ -60,45 +60,46 @@ fi
 # Populate the commit message with the jira issue #, if there is one
 ISSUE_TEXT=""
 
-THIRD_ARG=$(echo ${BRANCH} | cut -s -d'/' -f3)
+THIRD_ARG=$(echo "${BRANCH}" | cut -s -d'/' -f3)
 if [ -n "${THIRD_ARG}" ] ; then
-    ISSUE_NAME=$(echo ${BRANCH} | rev | cut -s -d'/' -f2 | rev)
+    ISSUE_NAME=$(echo "${BRANCH}" | rev | cut -s -d'/' -f2 | rev)
 
-    REPO=$(git remote get-url --push origin 2>/dev/null)
+    repo=$(git remote get-url --push origin 2>/dev/null)
 
-    if [ -z "${REPO}" ] ; then
-        printf "Please, specify remote origin url.\n\n"
-        echo   "git remote add origin git@github.com:USERNAME/REPOSITORY.git"
+    if [ -z "${repo}" ] ; then
+        echo -e \
+            "Please, specify remote origin url.\n\n"\
+            "git remote add origin git@github.com:USERNAME/REPOSITORY.git"
         exit 1
     fi
 
-    REPO=${REPO#"git@"}
-    REPO=${REPO%".git"}
+    repo=${repo#"git@"}
+    repo=${repo%".git"}
 
     if [[ ${ISSUE_NAME} =~ ${JIRA_REGEX} ]] ; then
 
-        REPO=$(echo ${REPO} | cut -s -d':' -f2 | cut -s -d'/' -f1)
-        LINK=${JIRA_ISSUE_LINK[${REPO}]}
+        repo=$(echo "${repo}" | cut -s -d':' -f2 | cut -s -d'/' -f1)
+        LINK=${JIRA_ISSUE_LINK[${repo}]}
 
         if [ -z "${LINK}" ] ; then
-            LINK="https://${REPO}.atlassian.net/browse"
+            LINK="https://${repo}.atlassian.net/browse"
         fi
 
         ISSUE_TEXT="Issue: ${LINK}/${ISSUE_NAME}"
 
     elif [[ ${ISSUE_NAME} =~ ${GITHUB_REGEX} ]] ; then
-        REPO=$(echo ${REPO} | tr ':' '/')
+        repo=$(echo "${repo}" | tr ':' '/')
 
-        ISSUE_TEXT="Issue: https://${REPO}/issues/${ISSUE_NAME}"
+        ISSUE_TEXT="Issue: https://${repo}/issues/${ISSUE_NAME}"
     fi
 fi
 
 
 # Use commit message from `git commit -m`
 if [[ $COMMIT_MSG_SOURCE == 'message' ]] ; then
-    COMMIT_MSG=$(cat $COMMIT_MSG_FILEPATH)
+    COMMIT_MSG=$(cat "$COMMIT_MSG_FILEPATH")
 
-    printf "$COMMIT_MSG\n\n${ISSUE_TEXT}" > ${COMMIT_MSG_FILEPATH}
+    echo -en "${COMMIT_MSG}\n\n${ISSUE_TEXT}" > "${COMMIT_MSG_FILEPATH}"
 
     exit 0
 fi
@@ -118,4 +119,4 @@ ${ISSUE_TEXT}
 # : Correct :
 # : Test    :
 # : ...     :
-$(cat ${COMMIT_MSG_FILEPATH})" > ${COMMIT_MSG_FILEPATH}
+$(cat ${COMMIT_MSG_FILEPATH})" > "${COMMIT_MSG_FILEPATH}"
