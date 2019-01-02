@@ -1,16 +1,15 @@
 #!/bin/bash
 
+# Import settings
+. .git/hooks/_default_settings.sh
+
+if [ -f .git/hooks/_user_defined_settings.sh ]; then
+    . .git/hooks/_user_defined_settings.sh
+fi
+
 ###########################
 # Branch styleguide check #
 ###########################
-
-FOOTER="\n
-Our style guide can be found at:
-https://github.com/pdffiller/styleguide-hooks#branch-naming-format
-
-Quickly rename branch:
-git branch -m NEW_BRANCH_NAME
-"
 
 # Figure out which branch we're on
 BRANCH=$(git symbolic-ref --quiet --short HEAD)
@@ -65,9 +64,9 @@ THIRD_ARG=$(echo ${BRANCH} | cut -s -d'/' -f3)
 if [ -n "${THIRD_ARG}" ] ; then
     ISSUE_NAME=$(echo ${BRANCH} | rev | cut -s -d'/' -f2 | rev)
 
-    GITHUB='^[0-9]+$'
-    JIRA='^[A-Z]{2,}-[0-9]+' # Default format: https://tinyurl.com/yd48c5op
-    if ! [[ ${ISSUE_NAME} =~ ${JIRA} || ${ISSUE_NAME} =~ ${GITHUB} ]] ; then
+    if ! [[ ${ISSUE_NAME} =~ ${JIRA_REGEX} ||
+            ${ISSUE_NAME} =~ ${GITHUB_REGEX} ]] ; then
+
         printf "Looks like mistake in Jira/Github issue name.\n"
         printf "Got '${ISSUE_NAME}', but should be like "
         printf "'PRJ-1234' for Jira or '1234' for Github"
