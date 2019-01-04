@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Import functions
+. .git/hooks/ask.sh
+. .git/hooks/color_echo.sh
+
 # Import settings
 . .git/hooks/_default_settings.sh
 
@@ -122,4 +126,55 @@ if [ "$allownonascii" != "true" ] && [ "${DIFF_BYTE_COUNT}" -ne 0 ]; then
 fi
 
 # If there are whitespace errors, print the offending file names and fail.
-exec git diff-index --check --cached $against --
+git diff-index --check --cached $against --
+exitcode=$?
+
+if [ ${exitcode} -ne 0 ] ; then
+    SPACE_MSG=true
+fi
+
+# Files (not deleted) in the index
+FILE_NAMES="$(git diff-index --name-status --cached ${against} | grep -v ^D | cut -c3-)"
+
+for f in ${FILE_NAMES}; do
+    if [[ -n $(tail -c 1 "${f}") ]]; then
+        echo "${f}: No newline at EOF."
+        exitcode=1
+    fi
+done
+
+if [ ${exitcode} -eq 0 ] && [ -n "${FILE_NAMES}" ]; then
+    exit 0
+fi
+
+if [ -n "${SPACE_MSG}" ]; then
+    color_echo "${COLOR_INFO}" "\n" \
+               "Whitespases in files with extentions" \
+               "'${IGNORE_TRAILING_SPACE_EXTENTIONS}' will be ignored"
+fi
+
+
+if [ "${INTERACTIVE_MODE}" = "disabled" ] || ask "Fix it and stage?" Y; then
+    for f in ${FILE_NAMES}; do
+        # Add a linebreak to the file if it doesn't have one
+        sed -i '' -e '$a\' "${f}" >/dev/null 2>&1
+
+        # Remove multiple newlines at EOF
+        awk '/^$/ {nlstack=nlstack "\n";next;}
+            {printf "%s",nlstack; nlstack=""; print;}' \
+            "${f}" > "${f}.tmp" && \
+            mv "${f}.tmp" "${f}"
+
+        # Not examine text files with next extentions
+        if ! [[ "${f}" =~ [.](${IGNORE_TRAILING_SPACE_EXTENTIONS})$ ]]; then
+            # Remove trailing whitespace if it exists
+            if grep -q "[[:blank:]]$" "${f}"; then
+                sed -i "" -e $'s/[ \t]*$//g' "${f}" >/dev/null 2>&1
+            fi
+        fi
+
+        git add "${f}"
+    done
+else
+    exit 1
+fi
