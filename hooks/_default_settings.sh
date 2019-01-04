@@ -16,6 +16,11 @@ Quickly rename branch:
 git branch -m NEW_BRANCH_NAME
 "
 
+COLOR_INFO="Light_Blue"
+COLOR_WARNING="Yellow"
+
+IGNORE_TRAILING_SPACE_EXTENTIONS="md|rst"
+
 ##########################
 ### prepare-commit-msg ###
 ##########################
