@@ -12,10 +12,11 @@ fi
 ###########################
 
 # Figure out which branch we're on
-BRANCH=$(git branch | grep '*' | sed 's/* //')
+BRANCH=$(git symbolic-ref --quiet --short HEAD)
 
-# Don't check if rebase running
-if [[ $BRANCH == '(no branch'* ]]; then
+# Don't check if rebase or any other operation running
+IS_BRANCH=$(git branch | grep '\*' | sed 's/\* //')
+if [[ "${IS_BRANCH}" == '(no branch'* ]]; then
     exit 0
 fi
 
