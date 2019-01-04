@@ -1,11 +1,25 @@
 #!/usr/bin/env bats
 
+function default_test {
+    run git commit -m "test"
+}
+
+function trailing_space_test {
+    git commit -m "test"
+    if [ "$(cat ${FILE})" = "${TEXT}" ]; then
+        status=0
+    else
+        status=1
+    fi
+}
+
 function test_via_commit {
     ##### Params #####
     BRANCH=$1
     EXIT_STATUS=$2
     FILE=${3-"test_file"}
     TEXT=${4-"${BRANCH}"}
+    RUN_TEST=${5-"default_test"}
     ### Params end ###
 
     # Preparation
@@ -15,7 +29,7 @@ function test_via_commit {
     git add ${FILE}
 
     # Test
-    run git commit -m "test"
+    $RUN_TEST
 
     # Cleanup
     git checkout -
@@ -147,11 +161,31 @@ function test_via_commit {
 }
 
 
-@test "not allowed trailing spaces" {
-    test_via_commit test/short_description 1 test_file "trailing spaces "
+@test "not allowed non-ASCII file name" {
+    test_via_commit test/short_description 1 тест_файл
 }
 
 
-@test "not allowed non-ASCII file name" {
-    test_via_commit test/short_description 1 тест_файл
+@test "allowed trailing spaces in ignored formats" {
+    EXTENTIONS=(
+        "md"
+        "rst"
+    )
+
+    for EXTENTION in ${EXTENTIONS[@]}; do
+        test_via_commit test/short_description 0 "file.${EXTENTION}" "space  " "trailing_space_test"
+    done
+}
+
+
+@test "not allowed trailing spaces" {
+    EXTENTIONS=(
+        "tf"
+        "py"
+    )
+
+    for EXTENTION in ${EXTENTIONS[@]}; do
+        test_via_commit test/short_description 1 "file.${EXTENTION}" "space  " "trailing_space_test"
+
+    done
 }

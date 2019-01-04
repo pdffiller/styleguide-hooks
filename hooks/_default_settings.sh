@@ -21,6 +21,8 @@ COLOR_WARNING="Yellow"
 
 IGNORE_TRAILING_SPACE_EXTENTIONS="md|rst"
 
+INTERACTIVE_MODE="disabled"
+
 ##########################
 ### prepare-commit-msg ###
 ##########################
