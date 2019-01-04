@@ -42,7 +42,7 @@ cd tests
 git clone git@github.com:pdffiller/styleguide-hooks.git
 ```
 
-#### 2. Setup it as your [template directory](https://git-scm.com/docs/git-init#_template_directory)
+#### 2. Set it up as your [template directory](https://git-scm.com/docs/git-init#_template_directory)
 
 ```bash
 git config --global init.templatedir $(pwd)/styleguide-hooks
@@ -56,15 +56,48 @@ You may ignore the remainder **nevertheless it's better to follow the next steps
 git config --global core.hooksPath $(pwd)/styleguide-hooks/hooks
 ```
 
-Via post-checkout hook you create/recreate the symlink to your hooks directory after every `git clone` of `git checkout`. [Documentation](https://git-scm.com/docs/githooks#_post_checkout).
+After every `git clone` and `git checkout` the post-checkout hook will create or recreate symlink to your hooks directory. [Documentation](https://git-scm.com/docs/githooks#_post_checkout).
 
-#### 4. If need - change default configuration
+#### 4. Change default configuration if needed
 
-1. Looks on `hooks/_default_settings.sh`<br>
-If you'd like change something:
+1. Look into `hooks/_default_settings.sh`<br>
+If you'd like to change something:
 2. Create `hooks/_user_defined_settings.sh`
 3. Copy settings for change from `default` to `user_defined`
 4. Change settings in `hooks/_user_defined_settings.sh`
+
+##### Availble settings
+
+| Constant                                 | What it changes                                                                                                                                                                        | Default               | Affects                               |
+| ---------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------| ------------------------------------- |
+| `COLOR_INFO`                             | Change default output color for Information messages.<br>[Available colors](https://github.com/pdffiller/styleguide-hooks/blob/stable/hooks/color_echo.sh).                            | `"Light_Blue"`        | `pre-commit`                          |
+| `COLOR_WARNING`                          | Change default output color for Warning/<br>Interaction needed messages. [Available colors](https://github.com/pdffiller/styleguide-hooks/blob/stable/hooks/color_echo.sh).            | `"Yellow"`            | `pre-commit`                          |
+| `IGNORE_TRAILING_`<br>`SPACE_EXTENTIONS` | Ignore trailing whitespaces for specified file extentions. Format `ext1\|ext2\|ext3`.                                                                                                  | `"md\|rst"`           | `pre-commit`                          |
+| `INTERACTIVE_MODE`                       | Pseudo-interactive mode for:<br>1. Replacing trailing whitespaces<br>2. Removing multilines at EOF<br>3. Adding new line at EOF if it doesn't exist<br>Can be `disabled` or `enabled`. | `"disabled"`          | `pre-commit`                          |
+| `FOOTER`                                 | Styleguide message that is added to every error message.                                                                                                                               | [[1]](#long-defaults) | `pre-commit`                          |
+| `GITHUB_REGEX`                           | Regex for matching Github issue inside branch name. A link to issue is created if a match was found.                                                                                   | `'^[0-9]+$'`          | `pre-commit`,<br>`prepare-commit-msg` |
+| `JIRA_ISSUE_LINK`                        | Link to Jira task endpoint.                                                                                                                                                            | [[2]](#long-defaults) | `prepare-commit-msg`                  |
+| `JIRA_REGEX`                             | Regex for matching Jira issue inside branch name. A link to issue is created if a match was found.<br>[Default Jira regex](https://tinyurl.com/yd48c5op).                              | `'^[A-Z]{2,}-[0-9]+'` | `pre-commit`,<br>`prepare-commit-msg` |
+| `STYLE_GUIDE_LINK`                       | Commit message styleguide format link.                                                                                                                                                 | [[3]](#long-defaults) | `prepare-commit-msg`                  |
+
+###### Long defaults
+
+```bash
+FOOTER="\n
+Our style guide can be found at:
+https://github.com/pdffiller/styleguide-hooks#branch-naming-format
+
+A quick way to rename your branch:
+git branch -m NEW_BRANCH_NAME
+"
+
+declare -A JIRA_ISSUE_LINK=(
+    ["org_name_in_github"]="https://org_name_in_jira.atlassian.net/browse"
+    ["org_name2_in_github"]="https://org_name2_in_jira.atlassian.net/browse"
+)
+
+STYLE_GUIDE_LINK="https://github.com/pdffiller/styleguide-hooks#commit-message-format"
+```
 
 #### 5. Make it always up-to-date
 
@@ -220,7 +253,7 @@ Go to repo Settings.
 
 ### Options - Data services
 
-If private repo - enable Vulnerability alerts. In public it enable by default.
+Enable Vulnerability alerts if the repo is private. In public repos it is enabled by default.
 
 ![Enabled Data Services](images/github_data_services.png)
 
@@ -234,7 +267,7 @@ Allow only Rebase
 
 WIP check can be found [here](https://github.com/marketplace/wip).
 
-Also, you can enable WIP check protection (or any other) only after create first pull request.
+Also, you can enable WIP check protection (or any other) only after creating your first pull request.
 
 ![Protection rules](images/github_branch_protection.png)
 

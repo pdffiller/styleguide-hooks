@@ -12,7 +12,7 @@ FOOTER="\n
 Our style guide can be found at:
 https://github.com/pdffiller/styleguide-hooks#branch-naming-format
 
-Quickly rename branch:
+A quick way to rename your branch:
 git branch -m NEW_BRANCH_NAME
 "
 
