@@ -12,13 +12,10 @@ fi
 ###########################
 
 # Figure out which branch we're on
-BRANCH=$(git symbolic-ref --quiet --short HEAD)
+BRANCH=$(git branch | grep '*' | sed 's/* //')
 
 # Don't check if rebase running
-if [ "${BRANCH}" == "" ] ; then
-    # When rebase running we get error "fatal: ref HEAD is not a symbolic ref"
-    # For a more subtle setting in the future can be used next command:
-    # `git rev-parse REBASE_HEAD`
+if [[ $BRANCH == '(no branch'* ]]; then
     exit 0
 fi
 
@@ -36,7 +33,7 @@ ALLOWED_TYPES=(
 )
 
 type_not_found=1
-for i in $(seq 0 ${#ALLOWED_TYPES[@]}); do
+for i in $(seq 0 $((${#ALLOWED_TYPES[@]} - 1)) ); do
     if [ "${ALLOWED_TYPES[$i]}" == "${ISSUE_TYPE}" ]; then
         type_not_found=0
         break
