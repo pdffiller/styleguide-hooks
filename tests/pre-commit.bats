@@ -35,7 +35,7 @@ function test_via_commit {
     git checkout -
     git branch -D ${BRANCH}
     git reset -- ${FILE}
-    rm -rf ${FILE}
+    rm -f ${FILE}
 
     # Check is test success
     [ "$status" -eq ${EXIT_STATUS} ]
