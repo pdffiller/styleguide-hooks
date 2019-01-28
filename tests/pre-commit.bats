@@ -139,27 +139,13 @@ function test_via_commit {
         test/21/short_description
         test/QQ-1/short_description
         test/MODULES/some-module/QQ-3/short_description
+        test/MODULES/some-module/short_description
     )
 
     for BRANCH in ${BRANCH_NAMES[@]}; do
         test_via_commit ${BRANCH} 0
     done
 }
-
-
-@test "unsupport wrong issue ID format" {
-    BRANCH_NAMES=(
-        test/E42/short_description
-        test/qq-1/short_description
-        test/1_1/short_description
-        test/MODULES/some-module/44-3/short_description
-    )
-
-    for BRANCH in ${BRANCH_NAMES[@]}; do
-        test_via_commit ${BRANCH} 1
-    done
-}
-
 
 @test "not allowed non-ASCII file name" {
     test_via_commit test/short_description 1 тест_файл
