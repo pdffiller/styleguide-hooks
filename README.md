@@ -36,11 +36,16 @@ cd tests
 
 ## How to use the hooks
 
-#### 1. Clone this repo
+#### 1. Clone this repo and checkout to latest tag
 
 ```bash
 git clone git@github.com:pdffiller/styleguide-hooks.git
+cd styleguide-hooks
+git checkout v0.2.0.1 2>/dev/null && git status
+cd -
 ```
+
+You should see `HEAD detached at v0.2.0.1`.
 
 #### 2. Set it up as your [template directory](https://git-scm.com/docs/git-init#_template_directory)
 
