@@ -65,6 +65,19 @@ if [ -z "${DESCRIPTION}" ] ; then
 fi
 
 
+LINES_CHANGED=$(git diff --staged --stat | tail -n 1 | \
+                awk '{gsub("[^0-9]", " ")} {changes=$2+$3} {print changes}')
+
+if [ ${LINES_CHANGED} -ge 1000 ]; then
+     color_echo "${COLOR_INFO}" "\n" \
+        "Too many changes per one commit\n"\
+        "Should be less than 1000, but staged ${LINES_CHANGED}"
+    if [ "${FORСE_WARNING_TO_ERROR}" != "disabled" ] ||
+        ask "Return and split to separate commits?" Y; then
+        exit 1
+    fi
+fi
+
 ######################
 # Default pre-commit #
 ######################

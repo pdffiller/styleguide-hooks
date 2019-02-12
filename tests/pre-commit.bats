@@ -13,6 +13,16 @@ function trailing_space_test {
     fi
 }
 
+function big_commit_test {
+    for (( i=0; i<1000; i++ )); do
+        echo "${i}" >> ${FILE}
+    done
+
+    git add ${FILE}
+
+    run git commit -m "test"
+}
+
 function test_via_commit {
     ##### Params #####
     BRANCH=$1
@@ -174,4 +184,11 @@ function test_via_commit {
         test_via_commit test/short_description 1 "file.${EXTENTION}" "space  " "trailing_space_test"
 
     done
+}
+
+@test "warning on big commit" {
+    echo "First test"
+    test_via_commit test/short_description 0
+    echo "Second test"
+    test_via_commit test/short_description 1 "file" "" "big_commit_test"
 }
