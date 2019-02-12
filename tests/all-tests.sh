@@ -9,7 +9,7 @@ fi
 cat << EOF > ${SETTINGS}
 ### For tests ###
 INTERACTIVE_MODE="disabled"
-FORСE_WARNING_TO_ERROR="enabled"
+FORCE_WARNING_TO_ERROR="enabled"
 #################
 EOF
 
