@@ -1,7 +1,48 @@
-#!/bin/sh
+#!/bin/bash
+
+
+# Import functions
+. .git/hooks/ask.sh
+
+# Import settings
+. .git/hooks/_default_settings.sh
+
+if [ -f .git/hooks/_user_defined_settings.sh ]; then
+    . .git/hooks/_user_defined_settings.sh
+fi
 
 # Replace default hooks by symlink on every checkout
 cd "$(pwd)/.git" && \
 rm -rf hooks && \
 ln -s "$(git config -l | grep core.hookspath | cut -c 16-)" hooks && \
 cd - >/dev/null || exit 1
+
+
+# Autoupdate mechanizm
+HOOKS_PATH=$(git config -l | grep init.templatedir | cut -c 18-)
+
+if [ ! -f "${HOOKS_PATH}/.git/FETCH_HEAD" ]; then
+  exit 0
+fi
+
+LAST_FETCH_TIME=$(stat -c %Y ${HOOKS_PATH}/.git/FETCH_HEAD)
+TIME_AGO=$(date --date="${CHECK_FOR_UPDATES_EVERY} ago" +%s)
+
+if [ $TIME_AGO -gt $LAST_FETCH_TIME ]; then
+    echo "Check for new styleguide-hooks version"
+    cd ${HOOKS_PATH}
+    git fetch --tags
+
+# Need gets tags from my styleguide-hooks repo, not local
+    LAST_TAG=$(git tag -l | tail -n 1)
+    CURRENT_TAG=$(git tag -l --points-at HEAD)
+
+    if [ "$LAST_TAG" == "$CURRENT_TAG" ]; then
+        echo "styleguide-hooks up-to-date"
+
+    elif ask "Update from ${CURRENT_TAG} to ${LAST_TAG}?" Y; then
+        git checkout "${LAST_TAG}" 2>/dev/null && \
+        echo "styleguide-hooks updated from ${CURRENT_TAG} to ${LAST_TAG}"
+    fi
+    cd - >/dev/null
+fi
