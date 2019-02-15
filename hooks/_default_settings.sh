@@ -34,3 +34,9 @@ declare -A JIRA_ISSUE_LINK=(
     ["org_name_in_github"]="https://org_name_in_jira.atlassian.net/browse"
     ["org_name2_in_github"]="https://org_name2_in_jira.atlassian.net/browse"
 )
+
+##########################
+##### post-checkout ######
+##########################
+
+CHECK_FOR_UPDATES_EVERY='1 week' # format as in `date` command (without 'ago')
