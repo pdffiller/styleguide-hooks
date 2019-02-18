@@ -33,16 +33,18 @@ if [ $TIME_AGO -gt $LAST_FETCH_TIME ]; then
     cd ${HOOKS_PATH}
     git fetch --tags
 
-# Need gets tags from my styleguide-hooks repo, not local
     LAST_TAG=$(git tag -l | tail -n 1)
-    CURRENT_TAG=$(git tag -l --points-at HEAD)
+    CURRENT=$(git tag -l --points-at HEAD)
+    if [ -z "${CURRENT}" ]; then
+        CURRENT=$(git branch | grep '\*' | sed 's/\* //')
+    fi
 
-    if [ "$LAST_TAG" == "$CURRENT_TAG" ]; then
+    if [ "$LAST_TAG" == "$CURRENT" ]; then
         echo "styleguide-hooks up-to-date"
 
-    elif ask "Update from ${CURRENT_TAG} to ${LAST_TAG}?" Y; then
+    elif ask "Checkout from ${CURRENT} to ${LAST_TAG}?" Y; then
         git checkout "${LAST_TAG}" 2>/dev/null && \
-        echo "styleguide-hooks updated from ${CURRENT_TAG} to ${LAST_TAG}"
+        echo "styleguide-hooks updated from ${CURRENT} to ${LAST_TAG}"
     fi
     cd - >/dev/null
 fi
