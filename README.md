@@ -41,11 +41,11 @@ cd tests
 ```bash
 git clone git@github.com:pdffiller/styleguide-hooks.git
 cd styleguide-hooks
-git checkout v0.2.2.0 2>/dev/null && git status
+git checkout v0.2.2.1 2>/dev/null && git status
 cd -
 ```
 
-You should see `HEAD detached at v0.2.2.0`.
+You should see `HEAD detached at v0.2.2.1`.
 
 #### 2. Set it up as your [template directory](https://git-scm.com/docs/git-init#_template_directory)
 
@@ -73,19 +73,20 @@ If you'd like to change something:
 
 ##### Availble settings
 
-| Constant                                 | What it changes                                                                                                                                                                        | Default               | Affects                               |
-| ---------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------| ------------------------------------- |
-| `COLOR_INFO`                             | Change default output color for Information messages.<br>[Available colors](https://github.com/pdffiller/styleguide-hooks/blob/stable/hooks/color_echo.sh).                            | `"Light_Blue"`        | `pre-commit`                          |
-| `COLOR_WARNING`                          | Change default output color for Warning.<br>Ineractive messages. [Available colors](https://github.com/pdffiller/styleguide-hooks/blob/stable/hooks/color_echo.sh).                    | `"Yellow"`            | `pre-commit`, `post-checkout`         |
-| `IGNORE_TRAILING_`<br>`SPACE_EXTENTIONS` | Ignore trailing whitespaces for specified file extentions. Format `ext1\|ext2\|ext3`.                                                                                                  | `"md\|rst"`           | `pre-commit`                          |
-| `INTERACTIVE_MODE`                       | Pseudo-interactive mode for:<br>1. Replacing trailing whitespaces<br>2. Removing multilines at EOF<br>3. Adding new line at EOF if it doesn't exist<br>Can be `disabled` or `enabled`. | `"disabled"`          | `pre-commit`                          |
-| `FORСE_WARNING_TO_ERROR`                 | Forсing exit if enabled.<br>Affects "Too many changes per one commit" check.<br>Can be `disabled` or `enabled`.                                                                        | `"disabled"`          | `pre-commit`                          |
-| `FOOTER`                                 | Styleguide message that is added to every error message.                                                                                                                               | [[1]](#long-defaults) | `pre-commit`                          |
-| `GITHUB_REGEX`                           | Regex for matching Github issue inside branch name. A link to issue is created if a match was found.                                                                                   | `'^[0-9]+$'`          | `pre-commit`,<br>`prepare-commit-msg` |
-| `JIRA_ISSUE_LINK`                        | Link to Jira task endpoint.                                                                                                                                                            | [[2]](#long-defaults) | `prepare-commit-msg`                  |
-| `JIRA_REGEX`                             | Regex for matching Jira issue inside branch name. A link to issue is created if a match was found.<br>[Default Jira regex](https://tinyurl.com/yd48c5op).                              | `'^[A-Z]{2,}-[0-9]+'` | `pre-commit`,<br>`prepare-commit-msg` |
-| `STYLE_GUIDE_LINK`                       | Commit message styleguide format link.                                                                                                                                                 | [[3]](#long-defaults) | `prepare-commit-msg`                  |
-| `CHECK_FOR_UPDATES_EVERY`                | Set how often to check for updates. Format as in `date` command.                                                                                                                       | `1 week`              | `post-checkout`                       |
+| Constant                                 | What it changes                                                                                                                                                                        | Default                            | Affects                               |
+| ---------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------- | ------------------------------------- |
+| `COLOR_INFO`                             | Change default output color for Information messages.<br>[Available colors](https://github.com/pdffiller/styleguide-hooks/blob/stable/hooks/color_echo.sh).                            | `"Light_Blue"`                     | `pre-commit`                          |
+| `COLOR_WARNING`                          | Change default output color for Warning.<br>Ineractive messages. [Available colors](https://github.com/pdffiller/styleguide-hooks/blob/stable/hooks/color_echo.sh).                    | `"Yellow"`                         | `pre-commit`, `post-checkout`         |
+| `IGNORE_TRAILING_`<br>`SPACE_EXTENTIONS` | Ignore trailing whitespaces for specified file extentions. Format `ext1\|ext2\|ext3`.                                                                                                  | `"md\|rst"`                        | `pre-commit`                          |
+| `IGNORE_NO_`<br>`NEWLINE_AT_EOF`         | Ignore newline error for specified file extentions. Format `ext1\|ext2\|ext3`.                                                                                                         | `"jpeg\|jpg\|png\|svg\|gif\|webp"` | `pre-commit`                          |
+| `INTERACTIVE_MODE`                       | Pseudo-interactive mode for:<br>1. Replacing trailing whitespaces<br>2. Removing multilines at EOF<br>3. Adding new line at EOF if it doesn't exist<br>Can be `disabled` or `enabled`. | `"disabled"`                       | `pre-commit`                          |
+| `FORСE_WARNING_TO_ERROR`                 | Forсing exit if enabled.<br>Affects "Too many changes per one commit" check.<br>Can be `disabled` or `enabled`.                                                                        | `"disabled"`                       | `pre-commit`                          |
+| `FOOTER`                                 | Styleguide message that is added to every error message.                                                                                                                               | [[1]](#long-defaults)              | `pre-commit`                          |
+| `GITHUB_REGEX`                           | Regex for matching Github issue inside branch name. A link to issue is created if a match was found.                                                                                   | `'^[0-9]+$'`                       | `pre-commit`,<br>`prepare-commit-msg` |
+| `JIRA_ISSUE_LINK`                        | Link to Jira task endpoint.                                                                                                                                                            | [[2]](#long-defaults)              | `prepare-commit-msg`                  |
+| `JIRA_REGEX`                             | Regex for matching Jira issue inside branch name. A link to issue is created if a match was found.<br>[Default Jira regex](https://tinyurl.com/yd48c5op).                              | `'^[A-Z]{2,}-[0-9]+'`              | `pre-commit`,<br>`prepare-commit-msg` |
+| `STYLE_GUIDE_LINK`                       | Commit message styleguide format link.                                                                                                                                                 | [[3]](#long-defaults)              | `prepare-commit-msg`                  |
+| `CHECK_FOR_UPDATES_EVERY`                | Set how often to check for updates. Format as in `date` command.                                                                                                                       | `1 week`                           | `post-checkout`                       |
 
 ###### Long defaults
 

@@ -20,6 +20,7 @@ COLOR_INFO="Light_Blue"
 COLOR_WARNING="Yellow"
 
 IGNORE_TRAILING_SPACE_EXTENTIONS="md|rst"
+IGNORE_NO_NEWLINE_AT_EOF="jpeg|jpg|png|svg|gif|webp"
 
 INTERACTIVE_MODE="disabled"
 FORCE_WARNING_TO_ERROR="disabled"

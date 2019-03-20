@@ -132,8 +132,12 @@ FILE_NAMES="$(git diff-index --name-status --cached ${against} | grep -v ^D | cu
 
 for f in ${FILE_NAMES}; do
     if [[ -n $(tail -c 1 "${f}") ]]; then
-        echo "${f}: No newline at EOF."
-        exitcode=1
+
+        if ! [[ "${f}" =~ [.](${IGNORE_NO_NEWLINE_AT_EOF})$ ]]; then
+
+            echo "${f}: No newline at EOF."
+            exitcode=1
+        fi
     fi
 done
 
